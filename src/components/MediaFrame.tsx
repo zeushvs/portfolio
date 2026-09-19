@@ -24,8 +24,12 @@ type Props = {
   withSound?: boolean;
 };
 
-// How long a video may sit off-screen before its decoder/buffers are freed.
+// How long a video may sit far off-screen before its decoder/buffers are freed.
 const UNLOAD_DELAY_MS = 4000;
+
+// How far around the viewport a video starts downloading (top/right/bottom/left).
+// Wide sideways too, so the next slide of a pinned horizontal gallery is ready.
+const NEAR_MARGIN = "150% 100% 150% 100%";
 
 export type MediaFrameHandle = {
   getVideo: () => HTMLVideoElement | null;
@@ -51,7 +55,11 @@ const MediaFrame = forwardRef<MediaFrameHandle, Props>(function MediaFrame(
 ) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(priority);
+  // Two zones around the viewport: `near` (wide) starts downloading the video
+  // so it is already buffered when scrolled to; `inView` (tight) plays it.
+  // A player opened by an explicit click (withSound) starts in both.
+  const [near, setNear] = useState(priority || withSound);
+  const [inView, setInView] = useState(priority || withSound);
   const [soundOn, setSoundOn] = useState(false);
   const isPlayableVideo = media.kind === "video" && !media.placeholder;
 
@@ -59,25 +67,51 @@ const MediaFrame = forwardRef<MediaFrameHandle, Props>(function MediaFrame(
     if (media.placeholder || media.kind !== "video") return;
     const el = wrapRef.current;
     if (!el) return;
-    const obs = new IntersectionObserver(
+    const nearObs = new IntersectionObserver(
+      ([entry]) => setNear(entry.isIntersecting),
+      { rootMargin: NEAR_MARGIN }
+    );
+    const viewObs = new IntersectionObserver(
       ([entry]) => setInView(entry.isIntersecting),
       { rootMargin: "200px 0px" }
     );
-    obs.observe(el);
-    return () => obs.disconnect();
+    nearObs.observe(el);
+    viewObs.observe(el);
+    return () => {
+      nearObs.disconnect();
+      viewObs.disconnect();
+    };
   }, [media]);
 
+  // Buffering: attach the source (and start fetching it) when the video gets
+  // near, release it a few seconds after it has moved far away again.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v || !isPlayableVideo || still) return;
+    let unloadTimer: ReturnType<typeof setTimeout> | undefined;
+    if (near || inView) {
+      // Also covers a picker swapping which project this <video> points at.
+      if (v.getAttribute("src") !== media.src) {
+        v.src = media.src;
+        v.preload = autoPlay ? "auto" : "metadata";
+        v.load();
+      }
+    } else if (autoPlay && v.getAttribute("src")) {
+      // A paused video still holds its decoder and buffered data, and with
+      // dozens of large clips on the page that adds up.
+      unloadTimer = setTimeout(() => {
+        v.removeAttribute("src");
+        v.load();
+      }, UNLOAD_DELAY_MS);
+    }
+    return () => clearTimeout(unloadTimer);
+  }, [near, inView, still, autoPlay, isPlayableVideo, media.src]);
+
+  // Playback: only while actually in view.
   useEffect(() => {
     const v = videoRef.current;
     if (!v || media.placeholder || still) return;
-    let unloadTimer: ReturnType<typeof setTimeout> | undefined;
     if (inView && autoPlay) {
-      // The element persists across source swaps (e.g. a picker strip
-      // changing which project the same <video> points at), so the load
-      // algorithm needs an explicit kick before play() will do anything.
-      // It may also have been unloaded while off-screen (see below).
-      if (!v.getAttribute("src")) v.src = media.src;
-      v.load();
       if (withSound) {
         if (activeAudioVideo && activeAudioVideo !== v) activeAudioVideo.muted = true;
         activeAudioVideo = v;
@@ -95,17 +129,7 @@ const MediaFrame = forwardRef<MediaFrameHandle, Props>(function MediaFrame(
         v.muted = true;
         if (activeAudioVideo === v) activeAudioVideo = null;
       }
-      // A paused video still holds its decoder and buffered data, and with
-      // dozens of large clips on the page that adds up. Release it after a
-      // short grace period; it reloads when scrolled back into view.
-      if (autoPlay && v.getAttribute("src")) {
-        unloadTimer = setTimeout(() => {
-          v.removeAttribute("src");
-          v.load();
-        }, UNLOAD_DELAY_MS);
-      }
     }
-    return () => clearTimeout(unloadTimer);
   }, [inView, autoPlay, still, withSound, media.placeholder, media.src]);
 
   // Don't leave a dangling reference to an unmounted element as the
@@ -203,12 +227,24 @@ const MediaFrame = forwardRef<MediaFrameHandle, Props>(function MediaFrame(
                 ? "relative h-full w-auto object-contain"
                 : "absolute inset-0 h-full w-full object-cover"
             }
-            src={still ? `${media.src}#t=0.5` : media.src}
+            // The source is normally attached by the effect above once the video
+            // is near the viewport. Exceptions: priority videos (hero) load
+            // immediately, and thumbnails only ever show their poster frame
+            // (falling back to the video's first frame if there is no poster).
+            src={
+              still
+                ? media.poster
+                  ? undefined
+                  : `${media.src}#t=0.5`
+                : priority
+                  ? media.src
+                  : undefined
+            }
             poster={media.poster}
             muted
             loop
             playsInline
-            preload={still ? "metadata" : priority ? "auto" : "none"}
+            preload={still ? (media.poster ? "none" : "metadata") : priority ? "auto" : "none"}
           />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element

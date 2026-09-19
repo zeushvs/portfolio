@@ -42,9 +42,12 @@ const ph = (label: string, kind: MediaAsset["kind"] = "video"): MediaAsset => ({
 
 // Real, already-shot media pulled in from the previous portfolio — lives under
 // /public/media/**. `label` doubles as the relative path for reference.
+// Videos get a first-frame preview at /media/posters/<same path>.jpg so
+// something shows instantly while the (large) video file is still loading.
 const asset = (path: string, kind: MediaAsset["kind"] = "video"): MediaAsset => ({
   kind,
   src: `/media/${path}`,
+  poster: kind === "video" ? `/media/posters/${path.replace(/\.[^.]+$/, ".jpg")}` : undefined,
   placeholder: false,
   label: path,
 });
