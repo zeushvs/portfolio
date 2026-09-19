@@ -15,7 +15,7 @@ export default function About() {
       style={{ "--accent": "#c45a45" } as React.CSSProperties}
       className="relative flex min-h-[90vh] flex-col justify-center gap-12 bg-[var(--bg)] px-6 py-32 sm:px-10"
     >
-      <span className="font-mono-label text-[11px] text-[var(--fg-faint)]">10 — ABOUT</span>
+      <span className="font-mono-label text-sm font-bold text-[var(--fg-faint)]">ABOUT</span>
 
       <div className="grid grid-cols-1 items-center gap-14 md:grid-cols-[minmax(0,340px)_1fr] md:gap-16">
         <div className="relative mx-auto w-full max-w-xs md:mx-0">

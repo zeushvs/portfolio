@@ -20,7 +20,6 @@ export default function ChapterHeader({
     >
       <div className="flex w-full items-baseline justify-between font-mono-label text-[11px] text-[var(--fg-faint)]">
         <span>CHAPTER {category.index}</span>
-        <span>{category.nav.toUpperCase()}</span>
       </div>
       <h2 className="text-[13vw] font-semibold uppercase leading-[0.9] tracking-tight sm:text-6xl md:text-[6.5vw]">
         {category.headline[0] && <span className="block">{category.headline[0]}</span>}

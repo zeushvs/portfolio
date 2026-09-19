@@ -5,7 +5,7 @@ import { motion, useTransform } from "motion/react";
 import { useGlobalScrollProgress } from "./ScrollProgressContext";
 
 const LINKS = [
-  { href: "#work", label: "WORK" },
+  { href: "#brand", label: "WORK" },
   { href: "#about", label: "ABOUT" },
   { href: "#contact", label: "CONTACT" },
 ];
@@ -44,7 +44,7 @@ export default function Navigation() {
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-[var(--bg)] via-[var(--bg)]/70 to-transparent" />
       <nav className="mx-auto flex max-w-[1600px] items-center justify-between px-6 py-5 sm:px-10">
         <a href="#hero" className="font-mono-label text-[11px] text-[var(--fg-dim)]">
-          HS / REEL
+          PORTFOLIO
         </a>
         <ul className="hidden items-center gap-8 sm:flex">
           {LINKS.map((l) => (
