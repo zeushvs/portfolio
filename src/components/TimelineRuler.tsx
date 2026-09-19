@@ -17,10 +17,12 @@ export default function TimelineRuler({
   const rootRef = useRef<HTMLDivElement>(null);
   const playheadRef = useRef<HTMLDivElement>(null);
 
-  // The playhead only travels as far as the active chapter's own tick (the
-  // end of its segment), not the whole ruler. No active tick → full length.
+  // The playhead only travels across the active chapter's own segment: it
+  // starts where the previous chapter's tick ended and stops at the current
+  // chapter's tick. No active tick → the full length.
   const activeIndex = ticks.findIndex((t) => t.active);
-  const reach = activeIndex === -1 ? 1 : (activeIndex + 1) / ticks.length;
+  const from = activeIndex === -1 ? 0 : activeIndex / ticks.length;
+  const to = activeIndex === -1 ? 1 : (activeIndex + 1) / ticks.length;
 
   useEffect(() => {
     const root = rootRef.current;
@@ -33,12 +35,12 @@ export default function TimelineRuler({
       end: "bottom 10%",
       scrub: true,
       onUpdate: (self) => {
-        gsap.set(playhead, { left: `${self.progress * reach * 100}%` });
+        gsap.set(playhead, { left: `${(from + self.progress * (to - from)) * 100}%` });
       },
     });
 
     return () => st.kill();
-  }, [reach]);
+  }, [from, to]);
 
   return (
     <div ref={rootRef} className={`w-full ${className}`}>
@@ -50,7 +52,7 @@ export default function TimelineRuler({
         <div
           ref={playheadRef}
           className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--accent)]"
-          style={{ left: "0%" }}
+          style={{ left: `${from * 100}%` }}
         />
       </div>
       <div className="mt-3 grid grid-flow-col auto-cols-fr gap-2">
