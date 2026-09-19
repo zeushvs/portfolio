@@ -17,6 +17,11 @@ export default function TimelineRuler({
   const rootRef = useRef<HTMLDivElement>(null);
   const playheadRef = useRef<HTMLDivElement>(null);
 
+  // The playhead only travels as far as the active chapter's own tick (the
+  // end of its segment), not the whole ruler. No active tick → full length.
+  const activeIndex = ticks.findIndex((t) => t.active);
+  const reach = activeIndex === -1 ? 1 : (activeIndex + 1) / ticks.length;
+
   useEffect(() => {
     const root = rootRef.current;
     const playhead = playheadRef.current;
@@ -28,12 +33,12 @@ export default function TimelineRuler({
       end: "bottom 10%",
       scrub: true,
       onUpdate: (self) => {
-        gsap.set(playhead, { left: `${self.progress * 100}%` });
+        gsap.set(playhead, { left: `${self.progress * reach * 100}%` });
       },
     });
 
     return () => st.kill();
-  }, []);
+  }, [reach]);
 
   return (
     <div ref={rootRef} className={`w-full ${className}`}>
