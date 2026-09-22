@@ -78,23 +78,23 @@ export default function HorizontalGallery({
                   <MediaFrame media={project.media} fit="contain-mobile" className="h-full w-full" />
                 )}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-2 p-6 sm:p-10">
-                  <div className="flex items-baseline justify-between font-mono-label text-[10px] text-[var(--fg-dim)]">
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-1 p-3 sm:gap-2 sm:p-10">
+                  <div className="flex items-baseline justify-between font-mono-label text-[9px] text-[var(--fg-dim)] sm:text-[10px]">
                     <span>
                       {String(i + 1).padStart(2, "0")}
                       {!numberOnly && ` / ${project.services.join(" · ")}`}
                     </span>
                     {project.year && <span>{project.year}</span>}
                   </div>
-                  <h3 className="text-4xl font-semibold uppercase tracking-tight text-[var(--fg)] sm:text-6xl">
+                  <h3 className="text-xl font-semibold uppercase tracking-tight text-[var(--fg)] sm:text-6xl">
                     {project.title}
                   </h3>
-                  <div className="flex flex-wrap gap-x-6 font-mono-label text-[11px] text-[var(--fg-dim)]">
+                  <div className="flex flex-wrap gap-x-3 font-mono-label text-[9px] text-[var(--fg-dim)] sm:gap-x-6 sm:text-[11px]">
                     {project.client && <span>CLIENT — {project.client}</span>}
                     <span>ROLE — {project.role}</span>
                   </div>
                   {project.blurb && (
-                    <p className="mt-2 max-w-md font-mono-label text-xs leading-relaxed text-[var(--fg-faint)]">
+                    <p className="hidden font-mono-label leading-relaxed text-[var(--fg-faint)] sm:mt-2 sm:block sm:max-w-md sm:text-xs">
                       {project.blurb}
                     </p>
                   )}

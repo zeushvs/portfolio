@@ -10,17 +10,17 @@ const category = categories.find((c) => c.id === "motion-graphics")!;
 
 function SlideMeta({ project, index }: { project: Project; index: number }) {
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-2 p-6 sm:p-8">
-      <div className="flex items-baseline justify-between font-mono-label text-[10px] text-[var(--fg-dim)]">
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-1 p-3 sm:gap-2 sm:p-8">
+      <div className="flex items-baseline justify-between font-mono-label text-[9px] text-[var(--fg-dim)] sm:text-[10px]">
         <span>
           {String(index + 1).padStart(2, "0")} / {project.services.join(" · ")}
         </span>
         {project.year && <span>{project.year}</span>}
       </div>
-      <h3 className="text-3xl font-semibold uppercase tracking-tight text-[var(--fg)] sm:text-5xl">
+      <h3 className="text-lg font-semibold uppercase tracking-tight text-[var(--fg)] sm:text-5xl">
         {project.title}
       </h3>
-      <div className="flex flex-wrap gap-x-6 font-mono-label text-[11px] text-[var(--fg-dim)]">
+      <div className="flex flex-wrap gap-x-3 font-mono-label text-[9px] text-[var(--fg-dim)] sm:gap-x-6 sm:text-[11px]">
         {project.client && <span>CLIENT — {project.client}</span>}
         <span>ROLE — {project.role}</span>
       </div>

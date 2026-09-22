@@ -66,7 +66,7 @@ export default function Travel() {
               className="relative aspect-video w-full overflow-hidden sm:aspect-auto sm:h-[75vh] sm:w-[75%]"
             >
               <MediaFrame media={p.media} fit="contain-mobile" className="h-full w-full" />
-              <div className="pointer-events-none absolute bottom-6 left-6 font-mono-label text-[13px] text-[var(--fg-dim)]">
+              <div className="pointer-events-none absolute bottom-3 left-3 font-mono-label text-xs text-[var(--fg-dim)] sm:bottom-6 sm:left-6 sm:text-[13px]">
                 {p.title}
               </div>
             </div>
