@@ -14,6 +14,7 @@ export default function Navigation() {
   const progress = useGlobalScrollProgress();
   const scaleX = useTransform(progress, [0, 1], [0, 1]);
   const [dimmed, setDimmed] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,8 +59,38 @@ export default function Navigation() {
             </li>
           ))}
         </ul>
-        <span className="font-mono-label text-[11px] text-[var(--fg-faint)]">2026</span>
+        <div className="flex items-center gap-4 sm:hidden">
+          <button
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav-menu"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            className="font-mono-label text-[11px] text-[var(--fg-dim)]"
+          >
+            {menuOpen ? "CLOSE" : "MENU"}
+          </button>
+        </div>
+        <span className="hidden font-mono-label text-[11px] text-[var(--fg-faint)] sm:inline">2026</span>
       </nav>
+      {menuOpen && (
+        <ul
+          id="mobile-nav-menu"
+          className="flex flex-col gap-1 border-t border-[var(--line-soft)] bg-[var(--bg)] px-6 py-4 sm:hidden"
+        >
+          {LINKS.map((l) => (
+            <li key={l.href}>
+              <a
+                href={l.href}
+                onClick={() => setMenuOpen(false)}
+                className="block py-3 font-mono-label text-lg uppercase text-[var(--fg-dim)] transition-colors hover:text-[var(--fg)]"
+              >
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
       <div className="h-px w-full bg-[var(--line-soft)]">
         <motion.div
           style={{ scaleX, transformOrigin: "0% 50%" }}

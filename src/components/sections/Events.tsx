@@ -21,7 +21,7 @@ function CutStrip({
   onSelect: (i: number) => void;
 }) {
   return (
-    <div ref={wrapRef} className="relative w-full overflow-hidden">
+    <div ref={wrapRef} className="relative w-full overflow-x-auto md:overflow-hidden">
       <div ref={stripRef} className="flex w-max gap-3 px-6 sm:px-10">
         {Array.from({ length: CUT_COUNT }).map((_, i) => {
           const projectIndex = i % category.projects.length;

@@ -55,12 +55,12 @@ export default function TimelineRuler({
           style={{ left: `${from * 100}%` }}
         />
       </div>
-      <div className="mt-3 grid grid-flow-col auto-cols-fr gap-2">
+      <div className="mt-3 flex gap-3 overflow-x-auto sm:grid sm:grid-flow-col sm:auto-cols-fr sm:gap-2 sm:overflow-visible">
         {ticks.map((t) => (
-          <div key={t.label} className="flex flex-col gap-1">
+          <div key={t.label} className="flex shrink-0 flex-col gap-1">
             <div className={`rule ${t.active ? "bg-[var(--fg-dim)]" : ""}`} />
             <span
-              className={`font-mono-label text-[10px] ${
+              className={`whitespace-nowrap font-mono-label text-[10px] ${
                 t.active ? "text-[var(--fg)]" : "text-[var(--fg-faint)]"
               }`}
             >
