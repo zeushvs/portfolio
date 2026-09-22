@@ -12,7 +12,10 @@ type Props = {
   priority?: boolean;
   // "cover" (default) crops to fill the frame; "contain" preserves the
   // source's native aspect ratio instead (e.g. side-by-side vertical clips).
-  fit?: "cover" | "contain";
+  // "contain-mobile" is "contain" below the `sm` breakpoint and "cover" from
+  // `sm` up — for sections that should show the full uncropped frame on
+  // phones but keep their existing cropped desktop/tablet look untouched.
+  fit?: "cover" | "contain" | "contain-mobile";
   // false disables the built-in click-to-toggle-sound behavior, for
   // thumbnails whose click is repurposed by a parent (e.g. a picker strip).
   interactive?: boolean;
@@ -198,7 +201,9 @@ const MediaFrame = forwardRef<MediaFrameHandle, Props>(function MediaFrame(
     >
       <div
         ref={wrapRef}
-        className={`absolute inset-0 ${fit === "contain" && !media.placeholder ? "flex items-center justify-center" : ""}`}
+        className={`absolute inset-0 ${
+          fit !== "cover" && !media.placeholder ? "flex items-center justify-center" : ""
+        }`}
       >
         {media.placeholder ? (
           <div
@@ -225,7 +230,9 @@ const MediaFrame = forwardRef<MediaFrameHandle, Props>(function MediaFrame(
             className={
               fit === "contain"
                 ? "relative h-full w-auto object-contain"
-                : "absolute inset-0 h-full w-full object-cover"
+                : fit === "contain-mobile"
+                  ? "relative h-full w-auto object-contain sm:absolute sm:inset-0 sm:h-full sm:w-full sm:object-cover"
+                  : "absolute inset-0 h-full w-full object-cover"
             }
             // The source is normally attached by the effect above once the video
             // is near the viewport. Exceptions: priority videos (hero) load

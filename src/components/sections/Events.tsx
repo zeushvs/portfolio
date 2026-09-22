@@ -146,8 +146,8 @@ export default function Events() {
       <CutStrip stripRef={topStripRef} wrapRef={topWrapRef} activeIndex={activeIndex} onSelect={setActiveIndex} />
 
       <div className="relative px-6 py-6 sm:px-10">
-        <div className="relative h-[60vh] w-full overflow-hidden sm:h-[85vh]">
-          <MediaFrame media={active.media} className="h-full w-full" />
+        <div className="relative aspect-video w-full overflow-hidden sm:aspect-auto sm:h-[85vh]">
+          <MediaFrame media={active.media} fit="contain-mobile" className="h-full w-full" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-2 p-6 sm:p-10">
             <div className="flex items-baseline justify-between font-mono-label text-[10px] text-[var(--fg-dim)]">

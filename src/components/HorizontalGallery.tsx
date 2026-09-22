@@ -64,18 +64,18 @@ export default function HorizontalGallery({
               key={project.slug}
               className="relative w-full shrink-0 px-6 py-6 sm:px-10 md:h-full md:w-screen md:px-0 md:py-0"
             >
-              <div className="relative h-[60vh] w-full overflow-hidden sm:h-[85vh] md:h-full">
+              <div className="relative aspect-video w-full overflow-hidden sm:aspect-auto sm:h-[85vh] md:h-full">
                 {project.gallery && project.gallery.length === 2 ? (
                   <div className="absolute inset-0 flex">
                     <div className="relative h-full w-1/2 border-r border-white/10">
-                      <MediaFrame media={project.gallery[0]} className="h-full w-full" />
+                      <MediaFrame media={project.gallery[0]} fit="contain-mobile" className="h-full w-full" />
                     </div>
                     <div className="relative h-full w-1/2">
-                      <MediaFrame media={project.gallery[1]} className="h-full w-full" />
+                      <MediaFrame media={project.gallery[1]} fit="contain-mobile" className="h-full w-full" />
                     </div>
                   </div>
                 ) : (
-                  <MediaFrame media={project.media} className="h-full w-full" />
+                  <MediaFrame media={project.media} fit="contain-mobile" className="h-full w-full" />
                 )}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-2 p-6 sm:p-10">

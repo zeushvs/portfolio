@@ -33,8 +33,8 @@ function SlideMeta({ project, index }: { project: Project; index: number }) {
 function FramedSlide({ project, index }: { project: Project; index: number }) {
   return (
     <div className="relative flex w-full shrink-0 items-center justify-center px-4 py-6 sm:px-8 md:h-full md:w-screen md:px-10 md:py-10">
-      <div className="relative h-[62vh] w-full max-w-3xl overflow-hidden rounded-2xl sm:h-[72vh] md:h-[80vh] md:w-[90%] md:max-w-5xl">
-        <MediaFrame media={project.media} className="h-full w-full" />
+      <div className="relative aspect-video w-full max-w-3xl overflow-hidden rounded-2xl sm:aspect-auto sm:h-[72vh] md:h-[80vh] md:w-[90%] md:max-w-5xl">
+        <MediaFrame media={project.media} fit="contain-mobile" className="h-full w-full" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
         <SlideMeta project={project} index={index} />
       </div>

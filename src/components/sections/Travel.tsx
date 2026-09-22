@@ -63,9 +63,9 @@ export default function Travel() {
           >
             <div
               data-parallax={0.08 + i * 0.04}
-              className="relative h-[55vh] w-full overflow-hidden sm:h-[75vh] sm:w-[75%]"
+              className="relative aspect-video w-full overflow-hidden sm:aspect-auto sm:h-[75vh] sm:w-[75%]"
             >
-              <MediaFrame media={p.media} className="h-full w-full" />
+              <MediaFrame media={p.media} fit="contain-mobile" className="h-full w-full" />
               <div className="pointer-events-none absolute bottom-6 left-6 font-mono-label text-[13px] text-[var(--fg-dim)]">
                 {p.title}
               </div>
